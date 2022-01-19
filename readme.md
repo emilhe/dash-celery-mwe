@@ -16,7 +16,7 @@ Make sure that Redis is available on `localhost:6379`. It can be spun up e.g. us
 
 Next, start the worker process,
 
-    celery -A cl.tasks worker --loglevel=info
+    celery -A cl.tasks worker --pool solo 
 
 Finally, spin up the app process,
 
