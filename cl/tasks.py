@@ -2,7 +2,7 @@ import time
 from celery import Celery
 
 # Link the celery app to the desired broker/backend as setup in the docker-compose file.
-celery_app = Celery('tasks', broker='pyamqp://guest@myapp-rabbitmq//', backend='redis://myapp-redis')
+celery_app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 
 
 # Put all long running tasks here and annotate them with the @celery_app.task decorator.

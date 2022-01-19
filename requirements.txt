@@ -1,5 +1,5 @@
-dash==1.11.0
+dash==2.0.0
 gunicorn
 flask
 dash_extensions
-celery[librabbitmq,redis]
+celery[redis]

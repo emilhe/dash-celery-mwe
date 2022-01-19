@@ -1,18 +1,13 @@
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.exceptions import PreventUpdate
 
 from flask import Flask
 from cl.tasks import take_a_nap, celery_app
 from celery.result import result_from_tuple
-from dash.dependencies import Output, Input, State
-from dash_extensions.callback import DashCallbackBlueprint
-
+from dash_extensions.enrich import DashProxy, MultiplexerTransform, Output, Input, State, dcc, html
+from dash.exceptions import PreventUpdate
 
 # Create app.
 server = Flask(__name__)
-app = dash.Dash(server=server)
+app = DashProxy(server=server, transforms=[MultiplexerTransform()], prevent_initial_callbacks=True)
 app.layout = html.Div([
     # User input (how many second to nap).
     dcc.Input(id="nap-duration", type="number", min=0, max=10, value=1),
@@ -26,11 +21,8 @@ app.layout = html.Div([
     dcc.Interval(id="poller", max_intervals=0),
 ])
 
-# Create callbacks.
-dcb = DashCallbackBlueprint()
 
-
-@dcb.callback([Output("btn-run", "disabled"), Output("btn-run", "children"),
+@app.callback([Output("btn-run", "disabled"), Output("btn-run", "children"),
                Output("result-tuple", "data"), Output("poller", "max_intervals")],
               [Input("btn-run", "n_clicks")], [State("nap-duration", "value")])
 def launch_job(n_clicks, value):
@@ -40,10 +32,12 @@ def launch_job(n_clicks, value):
     return True, "Napping...", result.as_tuple(), -1
 
 
-@dcb.callback([Output("btn-run", "disabled"), Output("btn-run", "children"),
+@app.callback([Output("btn-run", "disabled"), Output("btn-run", "children"),
                Output("div-result", "children"), Output("poller", "max_intervals")],
               [Input("poller", "n_intervals")], [State("result-tuple", "data")])
 def poll_result(n_intervals, data):
+    if not data:
+        raise PreventUpdate()
     result = result_from_tuple(data, app=celery_app)
     # If the calculation has not completed, do nothing.
     if not result.ready():
@@ -51,8 +45,6 @@ def poll_result(n_intervals, data):
     # On completion, enable button and set text (or stop spinner, etc.), return the result, and stop polling.
     return False, "Take a nap", result.get(), 0
 
-
-dcb.register(app)
 
 if __name__ == '__main__':
     app.run_server()
