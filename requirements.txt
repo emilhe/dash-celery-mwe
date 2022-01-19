@@ -1,6 +1,9 @@
 dash==2.0.0
 gunicorn
-flask
+flask~=2.0.2
 dash_extensions
-celery[redis,azureblockblob]
-python-dotenv
+celery[redis,azureblockblob]~=5.2.3
+python-dotenv~=0.19.2
+azure-servicebus
+billiard~=3.6.4.0
+kombu~=5.2.3

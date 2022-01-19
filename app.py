@@ -27,7 +27,7 @@ app.layout = html.Div([
               [Input("btn-run", "n_clicks")], [State("nap-duration", "value")])
 def launch_job(n_clicks, value):
     # Run the job asynchronously (note the .delay syntax).
-    result = take_a_nap.delay(value)
+    result = take_a_nap.delay(str(value))
     # Disable button and set text (or start a spinner, etc.), save result reference, and start polling.
     return True, "Napping...", result.as_tuple(), -1
 
@@ -43,7 +43,7 @@ def poll_result(n_intervals, data):
     if not result.ready():
         raise PreventUpdate()
     # On completion, enable button and set text (or stop spinner, etc.), return the result, and stop polling.
-    return False, "Take a nap", result.get(), 0
+    return False, "Take a nap", str(result.get()), 0
 
 
 if __name__ == '__main__':
