@@ -1,8 +1,12 @@
+import os
 import time
 from celery import Celery
+from dotenv import load_dotenv
 
-# Link the celery app to the desired broker/backend as setup in the docker-compose file.
-celery_app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
+load_dotenv()
+celery_app = Celery('tasks', broker='redis://localhost:6379/0',
+                    backend=f"azureblockblob://{os.getenv('AZURE_CONNECTION_STRING')}",
+                    azureblockblob_container_name=os.getenv("AZURE_CONTAINER_NAME"))
 
 
 # Put all long running tasks here and annotate them with the @celery_app.task decorator.
