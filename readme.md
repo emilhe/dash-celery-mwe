@@ -10,7 +10,7 @@ Create a virtual environment and install the requirements,
     source venv/bin/activate
     pip install -r requirements.txt
 
-Copy the .env.example file to a .env file and in values in brackets [] (can be found in the [Azure portal](https://portal.azure.com/)). Next, start the worker process,
+Copy the .env.example file to a .env file and fill in values in brackets [] (can be found in the [Azure portal](https://portal.azure.com/)). Next, start the worker process,
 
     celery -A cl.tasks worker --pool solo 
 
