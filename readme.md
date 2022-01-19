@@ -1,6 +1,6 @@
 # Dash celery mwe
 
-This repository holds a minimal working example of how a (long) job can be run asynchronously in Plotly Dash using Celery and Redis. 
+This repository holds a minimal working example of how a (long) job can be run asynchronously in Plotly Dash using Celery and Azure infrastructure. 
 
 ## Running the example
 
