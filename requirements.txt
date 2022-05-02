@@ -1,5 +1,5 @@
-dash==1.11.0
+dash==2.3.1
 gunicorn
 flask
-dash_extensions
+dash_extensions==0.1.0
 celery[librabbitmq,redis]
